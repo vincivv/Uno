@@ -1,30 +1,43 @@
-# Team Name — Game Uno!
+# UNO Online
 
-CSC 667 Term Project — Spring 2026
+UNO Online is a full-stack web application that brings the classic card game to the browser with account-based access, multiplayer game management, and live game-state updates.
 
-## Team Members
+Built as a TypeScript/Node.js project, the application uses Express for the server layer, EJS for rendering views, PostgreSQL for persistence, and Server-Sent Events (SSE) to keep players synchronized during gameplay.
 
-| Name | GitHub | Email |
-|------|--------|-------|
-| Kelvin Quach | @kquach31 | kquach@sfsu.edu |
-| Kyler Simmons Ayala | @Kyler2424 | ksimmonsayala@sfsu.edu |
-| Dias Almat | @vincivv | dalmat@sfsu.edu |
-| Ruben Amaral Almaraz | @rubenAmaral | ramaral@sfsu.edu |
+## Features
 
-## Setup
+- User registration and login
+- Persistent session management with PostgreSQL-backed sessions
+- Lobby flow for creating and joining games
+- Browser-based UNO gameplay
+- Real-time game updates using SSE
+- Database migrations for schema management
 
-```bash
-npm install
-cp .env.example .env
-# Edit .env with your database credentials
-npm run dev
+## Tech Stack
+
+- TypeScript
+- Node.js
+- Express
+- EJS
+- PostgreSQL
+- `node-pg-migrate`
+- ESLint and Prettier
+
+## Project Structure
+
+```text
+src/
+  client/       Frontend TypeScript for lobby and gameplay interactions
+  db/           Database access and game logic helpers
+  middleware/   Express middleware
+  routes/       Route handlers for auth, lobby, gameplay, and SSE
+  types/        Shared TypeScript types
+views/          EJS templates
+public/         Static assets
+migrations/     Database migration files
 ```
 
-## Scripts
+## Notes
 
-- `npm run dev` — Start development server with hot reload
-- `npm run build` — Compile TypeScript
-- `npm start` — Run compiled server
-- `npm run lint` — Check for lint errors
-- `npm run lint:fix` — Auto-fix lint errors
-- `npm run format` — Format code with Prettier
+- This repository is maintained as an independent copy for personal development and deployment.
+- Review environment variables and deployment settings before publishing or connecting the project to production services.
