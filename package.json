@@ -1,7 +1,7 @@
 {
-  "name": "term-project",
+  "name": "uno-game",
   "version": "1.0.0",
-  "description": "CSC 667 Term Project - Spring 2026",
+  "description": "Browser-based multiplayer UNO game built with TypeScript, Express, PostgreSQL, and Server-Sent Events.",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {

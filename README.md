@@ -36,8 +36,3 @@ views/          EJS templates
 public/         Static assets
 migrations/     Database migration files
 ```
-
-## Notes
-
-- This repository is maintained as an independent copy for personal development and deployment.
-- Review environment variables and deployment settings before publishing or connecting the project to production services.
