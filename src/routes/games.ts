@@ -8,7 +8,7 @@ const router = Router();
 
 interface PlayCardRequestBody {
   gameCardId: number;
-  chosenColor?: string; // NEW: Added optional chosenColor property
+  chosenColor?: string;
 }
 
 async function broadcastGameState(gameId: number): Promise<void> {
@@ -22,6 +22,20 @@ async function broadcastGameState(gameId: number): Promise<void> {
       state,
     });
   }
+}
+
+function getValidGameId(rawGameId: unknown): number | null {
+  if (typeof rawGameId !== "string") {
+    return null;
+  }
+
+  const gameId = Number(rawGameId);
+
+  if (!Number.isInteger(gameId) || gameId <= 0) {
+    return null;
+  }
+
+  return gameId;
 }
 
 router.get("/", async (_request, response) => {
@@ -38,9 +52,9 @@ router.get("/:gameId/state", async (request, response) => {
     return;
   }
 
-  const gameId = Number(request.params.gameId);
+  const gameId = getValidGameId(request.params.gameId);
 
-  if (!Number.isInteger(gameId) || gameId <= 0) {
+  if (gameId === null) {
     response.status(400).json({ error: "Invalid game id" });
     return;
   }
@@ -85,9 +99,9 @@ router.post("/:gameId/join", async (request, response) => {
     return;
   }
 
-  const gameId = Number(request.params.gameId);
+  const gameId = getValidGameId(request.params.gameId);
 
-  if (!Number.isInteger(gameId) || gameId <= 0) {
+  if (gameId === null) {
     response.status(400).json({ error: "Invalid game id" });
     return;
   }
@@ -113,9 +127,9 @@ router.post("/:gameId/start", async (request, response) => {
     return;
   }
 
-  const gameId = Number(request.params.gameId);
+  const gameId = getValidGameId(request.params.gameId);
 
-  if (!Number.isInteger(gameId) || gameId <= 0) {
+  if (gameId === null) {
     response.status(400).json({ error: "Invalid game id" });
     return;
   }
@@ -147,24 +161,20 @@ router.post("/:gameId/play", async (request: TypedRequestBody<PlayCardRequestBod
     return;
   }
 
-  const gameId = Number(request.params.gameId);
+  const gameId = getValidGameId(request.params.gameId);
   const gameCardId = request.body.gameCardId;
-  const chosenColor = request.body.chosenColor; // NEW: Grab the color
+  const chosenColor = request.body.chosenColor;
 
-  if (
-    !Number.isInteger(gameId) ||
-    gameId <= 0 ||
-    !Number.isInteger(gameCardId) ||
-    gameCardId <= 0
-  ) {
+  if (gameId === null || !Number.isInteger(gameCardId) || gameCardId <= 0) {
     response.status(400).json({ error: "Invalid request" });
     return;
   }
 
   try {
-    // NEW: Pass chosenColor to the database function
     const state = await Uno.playCard(gameId, user.id, gameCardId, chosenColor);
+
     await broadcastGameState(gameId);
+
     response.status(200).json({ state });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to play card";
@@ -181,9 +191,9 @@ router.post("/:gameId/draw", async (request, response) => {
     return;
   }
 
-  const gameId = Number(request.params.gameId);
+  const gameId = getValidGameId(request.params.gameId);
 
-  if (!Number.isInteger(gameId) || gameId <= 0) {
+  if (gameId === null) {
     response.status(400).json({ error: "Invalid game id" });
     return;
   }
@@ -196,6 +206,90 @@ router.post("/:gameId/draw", async (request, response) => {
     response.status(200).json({ state });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to draw card";
+
+    response.status(400).json({ error: message });
+  }
+});
+
+router.post("/:gameId/end-turn", async (request, response) => {
+  const user = request.session.user;
+
+  if (!user) {
+    response.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const gameId = getValidGameId(request.params.gameId);
+
+  if (gameId === null) {
+    response.status(400).json({ error: "Invalid game id" });
+    return;
+  }
+
+  try {
+    const state = await Uno.endTurn(gameId, user.id);
+
+    await broadcastGameState(gameId);
+
+    response.status(200).json({ state });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to end turn";
+
+    response.status(400).json({ error: message });
+  }
+});
+
+router.post("/:gameId/shout-uno", async (request, response) => {
+  const user = request.session.user;
+
+  if (!user) {
+    response.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const gameId = getValidGameId(request.params.gameId);
+
+  if (gameId === null) {
+    response.status(400).json({ error: "Invalid game id" });
+    return;
+  }
+
+  try {
+    const state = await Uno.shoutUno(gameId, user.id);
+
+    await broadcastGameState(gameId);
+
+    response.status(200).json({ state });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to shout UNO";
+
+    response.status(400).json({ error: message });
+  }
+});
+
+router.post("/:gameId/catch-uno", async (request, response) => {
+  const user = request.session.user;
+
+  if (!user) {
+    response.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const gameId = getValidGameId(request.params.gameId);
+
+  if (gameId === null) {
+    response.status(400).json({ error: "Invalid game id" });
+    return;
+  }
+
+  try {
+    const state = await Uno.catchUno(gameId, user.id);
+
+    await broadcastGameState(gameId);
+
+    response.status(200).json({ state });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to catch UNO";
 
     response.status(400).json({ error: message });
   }

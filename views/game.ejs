@@ -1,57 +1,68 @@
-<!-- views/games.ejs-->
- 
-<div class="lobby-container">
-    <div class="lobby-header">
-        <h2 class="lobby-title">Uno Game #<%= gameId %></h2>
-        <script src="/js/game.js" defer></script>
+<link rel="stylesheet" href="/css/game.css">
+
+<div class="game-container">
+    <input id="game-id" type="hidden" value="<%= gameId %>">
+    <script src="/js/game.js" defer></script>
+
+    <div class="uno-table-wrapper">
+        
+        <div class="table-section top-player">
+            <div id="opponent-info-panel" class="player-hud-label">Waiting for Opponents...</div>
+            <div id="opponent-hand" class="card-row"></div>
+        </div>
+
+        <div class="table-section center-play-area">
+            <div class="center-notification-hub">
+                <div id="game-message" class="game-announcement">Initializing match tabletop engine...</div>
+                <div id="error-message" class="game-error-toast"></div>
+            </div>
+
+            <div class="deck-arena">
+                <div class="deck-stack-wrapper">
+                    <div class="deck-label">DRAW DECK</div>
+                    <div id="draw-deck" class="uno-card card-back">
+                        <div class="oval">UNO</div>
+                    </div>
+                </div>
+                
+                <div class="deck-stack-wrapper">
+                    <div class="deck-label">DISCARD PILE</div>
+                    <div id="discard-pile" class="discard-placeholder">Empty</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-section bottom-player">
+            <div id="local-player-label" class="player-hud-label">YOUR HAND</div>
+            <div id="player-hand" class="card-row"></div>
+        </div>
     </div>
 
-    <hr class="lobby-divider">
+    <div class="game-sidebar-hud">
+        <div class="sidebar-start-action">
+            <button id="start-game" class="ctrl-btn green-btn">Start Match</button>
+        </div>
 
-    <div class="lobby-body">
-        <p class="lobby-text">Logged in as: <strong><%= user.email %></strong></p>
-        <p class="lobby-welcome">This is the game room for Uno Game #<%= gameId %>.</p>
+        <div class="hud-section">
+            <h3>MATCH STATS</h3>
+            <hr class="hud-divider">
+            <div id="game-status" class="hud-stat-box">Loading stats...</div>
+        </div>
 
-        <input id="game-id" type="hidden" value="<%= gameId %>">
+        <div class="hud-section">
+            <h3>PLAYER ROSTER</h3>
+            <hr class="hud-divider">
+            <div id="players-list" class="roster-container"></div>
+        </div>
 
-        <section>
-            <h3>Game Controls</h3>
+        <div class="hud-actions">
+            <button id="draw-card" class="ctrl-btn blue-btn">Draw Card</button>
+            <button id="end-turn" class="ctrl-btn red-btn">End Turn</button>
 
-            <button id="start-game" type="button">
-                Start Game
-            </button>
-
-            <button id="draw-card" type="button"> Draw Card </button>
-
-            <div id="error-message" style="color: red; margin-top: 10px; font-weight: bold;"></div>
-        </section>
-
-        <section>
-            <h3>Messages</h3>
-
-            <div id="game-message">
-                Waiting for game actions...
+            <div class="uno-action-row">
+                <button id="shout-uno" class="ctrl-btn green-btn uno-square-btn">Shout UNO</button>
+                <button id="catch-uno" class="ctrl-btn red-btn uno-square-btn">Catch UNO</button>
             </div>
-        </section>
-
-        <section>
-            <h3>Game Status</h3>
-            <div id="game-status">Waiting for game state...</div>
-        </section>
-
-        <section>
-            <h3>Players</h3>
-            <div id="players-list">Waiting for players...</div>
-        </section>
-
-        <section>
-            <h3>Discard Pile</h3>
-            <div id="discard-pile">No discard card yet.</div>
-        </section>
-
-        <section>
-            <h3>Your Hand</h3>
-            <div id="player-hand">No cards dealt yet.</div>
-        </section>
+        </div>
     </div>
 </div>

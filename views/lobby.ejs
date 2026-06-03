@@ -1,36 +1,33 @@
-<div class="lobby-container">
-    <div class="lobby-header">
-        <h2 class="lobby-title">Uno Lobby</h2>
-        <script src="/js/lobby.js" defer></script>   <!-- defer means 'don't execute this script until the lobby page is loaded' -->
-    </div>
-    
-    <hr class="lobby-divider">
+<link rel="stylesheet" href="/css/lobby.css">
 
-    <div class="lobby-body">
-        <p class="lobby-text">Logged in as: <strong><%= user.email %></strong></p>
-        
-        <div class="avatar-section">
-            <img src="<%= user.gravatar_url %>" alt="User Avatar" class="user-avatar" 
-                 onerror="this.src='https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'">
-        </div>
-        
-        <p class="lobby-welcome">Create or join an Uno game.</p>
+<div class="lobby-wrapper">
+    <div class="lobby-header">
+        <h2 class="lobby-title">UNO Lobby</h2>
+        <script src="/js/lobby.js" defer></script>
+        <button id="create-game" class="btn-create">+ Create Game</button>
     </div>
     
-    <section>
-        <h3>Uno Games</h3>
-        <button id="create-game">Create Uno Game</button>
+    <div class="user-info-bar">
+        <div class="user-avatar-placeholder">
+            <span class="user-initial"><%= user.email.charAt(0).toUpperCase() %></span>
+        </div>
+        <div class="user-text">
+            <p class="logged-in-text">Logged in as: <span class="email-highlight"><%= user.email %></span></p>
+            <p class="lobby-subtitle">Join an active game or start your own!</p>
+        </div>
+    </div>
+    
+    <section class="games-section">
         <template id="game-template">
             <div class="game-card">
-                <span class="game-id"></span>
-                <span class="creator"></span>
-                <span class="players"></span>
-                <span class="status"></span>
-                <button class="join-game" type="button">Join Uno Game</button>
+                <h3 class="game-id">Uno Game #</h3>
+                <p class="status-text">Status: <span>waiting</span></p>
+                <button class="join-game" type="button">Join Match</button>
             </div>
         </template>
+        
         <div id="games-list">
-            <p>Loading...</p>
+            <p style="color: #666;">Loading games...</p>
         </div>
     </section>
 </div>
