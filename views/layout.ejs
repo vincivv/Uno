@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <!-- <script src="/js/lobby.js" defer></script> -->
+</head>
+<body>
+    <nav class="uno-nav">
+        <div class="nav-left">
+            <a href="/">HOME</a>
+        </div>
+        <div class="nav-right">
+            <% if (typeof user !== "undefined" && user) { %>
+                <span class="user-greet">Welcome, <%= user.email %></span>
+                <form action="/auth/logout" method="POST" style="display:inline;">
+                    <button type="submit" class="nav-btn logout">LOGOUT</button>
+                </form>
+            <% } else { %>
+                <a href="/auth/login">LOGIN</a>
+                <a href="/auth/register">REGISTER</a>
+            <% } %>
+        </div>
+    </nav>
+    <main>
+        <%- body %>
+    </main>
+</body>
+</html>

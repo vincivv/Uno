@@ -1,0 +1,57 @@
+<!-- views/games.ejs-->
+ 
+<div class="lobby-container">
+    <div class="lobby-header">
+        <h2 class="lobby-title">Uno Game #<%= gameId %></h2>
+        <script src="/js/game.js" defer></script>
+    </div>
+
+    <hr class="lobby-divider">
+
+    <div class="lobby-body">
+        <p class="lobby-text">Logged in as: <strong><%= user.email %></strong></p>
+        <p class="lobby-welcome">This is the game room for Uno Game #<%= gameId %>.</p>
+
+        <input id="game-id" type="hidden" value="<%= gameId %>">
+
+        <section>
+            <h3>Game Controls</h3>
+
+            <button id="start-game" type="button">
+                Start Game
+            </button>
+
+            <button id="draw-card" type="button"> Draw Card </button>
+
+            <div id="error-message" style="color: red; margin-top: 10px; font-weight: bold;"></div>
+        </section>
+
+        <section>
+            <h3>Messages</h3>
+
+            <div id="game-message">
+                Waiting for game actions...
+            </div>
+        </section>
+
+        <section>
+            <h3>Game Status</h3>
+            <div id="game-status">Waiting for game state...</div>
+        </section>
+
+        <section>
+            <h3>Players</h3>
+            <div id="players-list">Waiting for players...</div>
+        </section>
+
+        <section>
+            <h3>Discard Pile</h3>
+            <div id="discard-pile">No discard card yet.</div>
+        </section>
+
+        <section>
+            <h3>Your Hand</h3>
+            <div id="player-hand">No cards dealt yet.</div>
+        </section>
+    </div>
+</div>

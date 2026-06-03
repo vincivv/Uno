@@ -1,0 +1,74 @@
+{
+  "name": "term-project",
+  "version": "1.0.0",
+  "description": "CSC 667 Term Project - Spring 2026",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:server && npm run build:client && npm run migrate:up",
+    "build:server": "tsc",
+    "build:client": "esbuild src/client/*.ts --bundle --outdir=public/js --sourcemap",
+    "start": "node dist/server.js",
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "tsx watch src/server.ts",
+    "dev:client": "esbuild src/client/*.ts --bundle --outdir=public/js --sourcemap --watch",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "clean": "rm -rf dist/",
+    "prepare": "husky || true",
+    "migrate": "node-pg-migrate -j ts create -- ",
+    "migrate:up": "node-pg-migrate up -j ts",
+    "migrate:down": "node-pg-migrate down -j ts"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/connect-livereload": "^0.6.3",
+    "@types/connect-pg-simple": "^7.0.3",
+    "@types/dotenv": "^6.1.1",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.6",
+    "@types/express-ejs-layouts": "^2.5.4",
+    "@types/express-session": "^1.18.2",
+    "@types/livereload": "^0.9.5",
+    "@types/node": "^20.19.35",
+    "@types/pg-promise": "^0.0.28",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.28.0",
+    "eslint": "^10.0.2",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.2.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.2.0",
+    "prettier-plugin-ejs": "^1.0.3",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-livereload": "^0.6.1",
+    "connect-pg-simple": "^10.0.0",
+    "dotenv": "^17.3.1",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.19.0",
+    "livereload": "^0.10.3",
+    "node-pg-migrate": "^8.0.4",
+    "pg-promise": "^12.6.2"
+  }
+}
