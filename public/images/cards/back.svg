@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 216" role="img" aria-label="card back">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="132" height="204" rx="18" fill="#f8fafc"/>
+  <rect x="12" y="12" width="120" height="192" rx="16" fill="url(#bg)"/>
+  <rect x="28" y="34" width="88" height="148" rx="16" fill="url(#panel)" stroke="#facc15" stroke-width="4"/>
+  <ellipse cx="72" cy="108" rx="34" ry="54" fill="#111827" stroke="#fef3c7" stroke-width="3" transform="rotate(-18 72 108)"/>
+  <text x="72" y="112" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-style="italic" font-size="26" fill="#facc15" dominant-baseline="middle">UNO</text>
+  <path d="M26 24 C44 16, 100 16, 118 24" fill="none" stroke="#60a5fa" stroke-opacity="0.25" stroke-width="4"/>
+</svg>

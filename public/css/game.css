@@ -1,263 +1,529 @@
-/* Color Palette Variables */
 :root {
-    --red: #ef4444;
-    --blue: #3b82f6;
-    --green: #10b981;
-    --yellow: #eab308;
-  }
-  
-  body, main {
-      background: #090d16 !important;
-      height: 100vh;
-      width: 100vw;
-      margin: 0;
-      overflow: hidden;
-      color: #f1f5f9;
-      font-family: system-ui, -apple-system, sans-serif;
-  }
-  
-  .game-container {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(280px, 28vw, 340px);
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --green: #10b981;
+  --yellow: #facc15;
+  --ink: #090d16;
+  --panel: #0f172a;
+  --panel-soft: rgba(15, 23, 42, 0.76);
+  --line: rgba(148, 163, 184, 0.18);
+  --text: #f8fafc;
+  --muted: #94a3b8;
+}
+
+body,
+main {
+  background: #05070d !important;
   height: 100vh;
-}
-  
-  /* --- THE CASINO RADIAL GRADIENT FIELD --- */
-  .uno-table-wrapper {
-      background: radial-gradient(circle at center, #0284c7, #0f172a) !important;
-      display: grid;
-      grid-template-rows: 140px 1fr 180px;
-      height: 100vh;
-      padding: 20px;
-      box-sizing: border-box;
-  }
-  
-  .table-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-  }
-  
-  /* --- CARD STRUCTURES --- */
-  .card-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-  }
-  
-  .uno-card {
-      width: 85px;
-      height: 125px;
-      background: #ffffff;
-      border: 3px solid #ffffff;
-      border-radius: 8px;
-      box-shadow: -4px 5px 10px rgba(0,0,0,0.4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.2s ease;
-  }
-  
-  .uno-card:hover {
-      transform: translateY(-15px) scale(1.05);
-  }
-  
-  .uno-card .oval {
-      width: 85%;
-      height: 85%;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.5rem;
-      font-weight: 900;
-      transform: rotate(-15deg);
-      background: inherit;
-      box-shadow: inset 0 0 4px rgba(0,0,0,0.15);
-  }
-  
-  .uno-card.red { background-color: var(--red); color: #fff; }
-  .uno-card.blue { background-color: var(--blue); color: #fff; }
-  .uno-card.green { background-color: var(--green); color: #fff; }
-  .uno-card.yellow { background-color: var(--yellow); color: #1e293b; }
-  .uno-card.wild { background: conic-gradient(var(--red) 25%, var(--blue) 0 50%, var(--yellow) 0 75%, var(--green) 0); color: #fff; }
-  
-  .uno-card.card-back { background-color: #1e293b; }
-  .uno-card.card-back .oval {
-      background-color: #dc2626;
-      color: #fbbf24;
-      transform: rotate(0deg);
-      border-radius: 4px;
-      font-size: 1rem;
-      font-style: italic;
-      border: 2px solid #fbbf24;
-  }
-  
-  /* --- PLAY CONTEXT BANNER SYSTEM --- */
-  .center-notification-hub {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      min-height: 80px;
-      margin-bottom: 20px;
-  }
-  
-  .game-announcement {
-      color: #ffffff;
-      font-size: 0.95rem;
-      font-weight: 600;
-      background: rgba(15, 23, 42, 0.85);
-      padding: 8px 24px;
-      border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      text-align: center;
-  }
-  
-  .game-error-toast {
-      color: #f87171;
-      font-size: 0.9rem;
-      font-weight: 700;
-      background: rgba(127, 29, 29, 0.95);
-      padding: 8px 20px;
-      border-radius: 6px;
-      border: 1px solid var(--red);
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-  }
-  
-  .game-error-toast.visible { opacity: 1; }
-  
-  .deck-arena { display: flex; gap: 40px; }
-  .deck-stack-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .deck-label { font-size: 0.7rem; font-weight: 800; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
-  
-  /* --- ACTIVE PROFILE GLOW LAYOUTS --- */
-  .player-hud-label {
-      color: rgba(255,255,255,0.6);
-      font-weight: 700;
-      letter-spacing: 1px;
-      font-size: 0.8rem;
-      padding: 4px 14px;
-      border-radius: 20px;
-      border: 1px solid transparent;
-      transition: all 0.3s;
-  }
-  .active-turn-glow {
-      border-color: var(--yellow);
-      background: rgba(245, 158, 11, 0.15);
-      color: #ffffff;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
-  }
-  
-  /* --- SIDEBAR PANEL HOVER HUD --- */
-  .game-sidebar-hud {
-    background: #0b0f19;
-    border-left: 1px solid #1e293b;
-    padding: clamp(16px, 2vh, 24px) 20px clamp(24px, 3vh, 36px);
-    display: flex;
-    flex-direction: column;
-    gap: clamp(14px, 2vh, 20px);
-    min-height: 0;
-    overflow-y: auto;
-    box-sizing: border-box;
-    }
-  
-  .hud-section {
-      background: #111827;
-      border-radius: 6px;
-      padding: 14px;
-      border: 1px solid #1e293b;
-  }
-  
-  .hud-section h3 { margin: 0 0 8px 0; font-size: 0.75rem; color: #64748b; letter-spacing: 1px; }
-  .hud-divider { border: 0; height: 1px; background: #1e293b; margin-bottom: 10px; }
-  
-  .hud-stat-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; }
-  .value-highlight { color: #38bdf8; font-weight: 600; }
-  
-  .hud-player-item {
-      padding: 8px 10px;
-      border-radius: 4px;
-      margin-bottom: 6px;
-      font-size: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #090d16;
-      border: 1px solid #1e293b;
-  }
-  
-  .hud-player-item.active-turn-row {
-      border-color: var(--yellow);
-      background: rgba(245, 158, 11, 0.06);
-  }
-  
-  .turn-badge {
-      background: var(--yellow);
-      color: #0f172a;
-      font-size: 0.65rem;
-      font-weight: 800;
-      padding: 1px 4px;
-      border-radius: 3px;
-      text-transform: uppercase;
-  }
-  
-  /* CTA Buttons */
-  .hud-actions {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding-bottom: clamp(16px, 3vh, 32px);
-  }
-
-  .ctrl-btn {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 4px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #fff;
-  }
-  .green-btn { background: var(--green); }
-  .blue-btn { background: var(--blue); }
-  .red-btn { background: var(--red); }
-
-  .ctrl-btn.needs-attention {
-  outline: 3px solid #facc15;
-  box-shadow: 0 0 14px rgba(250, 204, 21, 0.9);
-  transform: scale(1.03);
-  
+  width: 100vw;
+  margin: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-family: "Trebuchet MS", "Avenir Next", sans-serif;
 }
 
-#player-hand.needs-end-turn button {
-  outline: 3px solid #facc15;
-  box-shadow: 0 0 12px rgba(250, 204, 21, 0.8);
+.game-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 27vw, 360px);
+  min-height: 100vh;
+}
+
+.uno-table-wrapper {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(96, 165, 250, 0.34), transparent 0 28%),
+    radial-gradient(circle at 50% 48%, #2f6fab 0, #1d4f81 28%, #14355a 62%, #08111f 100%);
+  display: grid;
+  grid-template-rows: 168px 1fr 244px;
+  padding: 22px 24px 26px;
+  box-sizing: border-box;
+}
+
+.uno-table-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 34px;
+  pointer-events: none;
+}
+
+.table-section {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-hud-label {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(10, 15, 27, 0.3);
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px);
+  text-transform: uppercase;
+}
+
+.active-turn-glow {
+  border-color: rgba(250, 204, 21, 0.66);
+  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.22), 0 0 24px rgba(250, 204, 21, 0.28);
+  color: #ffffff;
+}
+
+.card-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+#opponent-hand {
+  min-height: 118px;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.opponent-stack {
+  position: relative;
+  min-width: 150px;
+  height: 108px;
+  padding-top: 10px;
+}
+
+.opponent-card-image {
+  position: absolute;
+  left: var(--stack-offset);
+  top: 0;
+  width: 72px;
+  height: 108px;
+  filter: drop-shadow(0 12px 20px rgba(3, 7, 18, 0.34));
+}
+
+.opponent-stack-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  text-align: center;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.center-play-area {
+  gap: 22px;
+}
+
+.center-notification-hub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 82px;
+}
+
+.game-announcement {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  background: rgba(15, 23, 42, 0.84);
+  padding: 10px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.32);
+}
+
+.game-error-toast {
+  color: #fecaca;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: rgba(127, 29, 29, 0.95);
+  padding: 9px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(248, 113, 113, 0.66);
+  box-shadow: 0 0 18px rgba(239, 68, 68, 0.32);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.game-error-toast.visible {
+  opacity: 1;
+}
+
+.deck-arena {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+.deck-stack-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.deck-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.62);
+  letter-spacing: 0.2em;
+}
+
+.deck-card-slot,
+.discard-slot {
+  width: 144px;
+  min-height: 216px;
+  position: relative;
+}
+
+.uno-card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.32));
+  user-select: none;
+}
+
+.deck-count-badge {
+  position: absolute;
+  right: -10px;
+  bottom: 8px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 2px solid rgba(255, 255, 255, 0.84);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.discard-slot {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.discard-placeholder {
+  width: 144px;
+  height: 216px;
+  border: 2px dashed rgba(255, 255, 255, 0.24);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  background: rgba(8, 15, 29, 0.22);
+}
+
+.discard-card-stack {
+  position: relative;
+  width: 144px;
+}
+
+.current-color-chip {
+  margin-top: 10px;
+  border-radius: 999px;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.current-color-chip.red {
+  color: #fecaca;
+}
+
+.current-color-chip.blue {
+  color: #bfdbfe;
+}
+
+.current-color-chip.green {
+  color: #bbf7d0;
+}
+
+.current-color-chip.yellow {
+  color: #fde68a;
+}
+
+#player-hand {
+  min-height: 178px;
+  align-items: center;
+  gap: 0;
+  padding: 0 20px 6px;
+  overflow-x: auto;
+  overflow-y: visible;
+  justify-content: flex-start;
+}
+
+.hand-card-button {
+  width: 120px;
+  margin-left: -16px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.hand-card-button:first-child {
+  margin-left: 0;
+}
+
+.hand-card-button:hover {
+  transform: translateY(-14px) scale(1.04);
+  z-index: 5;
+}
+
+.hand-card-button:focus-visible {
+  outline: 3px solid rgba(250, 204, 21, 0.9);
+  outline-offset: 6px;
+  border-radius: 18px;
+  z-index: 6;
+}
+
+.hand-card-button .uno-card-image {
+  width: 120px;
+}
+
+.game-sidebar-hud {
+  background:
+    linear-gradient(180deg, rgba(12, 18, 31, 0.98), rgba(8, 11, 20, 0.98)),
+    #0b0f19;
+  border-left: 1px solid #182132;
+  padding: 20px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .sidebar-start-action {
   width: 100%;
-  margin-top: clamp(10px, 2vh, 22px);
+  margin-top: 6px;
+}
+
+.hud-section {
+  background: rgba(15, 23, 42, 0.72);
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.hud-section h3 {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  color: #7c8ca6;
+  letter-spacing: 0.16em;
+}
+
+.hud-divider {
+  border: 0;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.15);
+  margin-bottom: 14px;
+}
+
+.hud-stat-box,
+.roster-container {
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.hud-player-item {
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  font-size: 0.82rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: rgba(9, 13, 22, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.hud-player-item.active-turn-row {
+  border-color: rgba(250, 204, 21, 0.5);
+  background: rgba(250, 204, 21, 0.08);
+}
+
+.hud-player-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.status-badge,
+.turn-badge {
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.status-badge.warning {
+  background: rgba(239, 68, 68, 0.16);
+  color: #fecaca;
+}
+
+.status-badge.safe {
+  background: rgba(16, 185, 129, 0.16);
+  color: #bbf7d0;
+}
+
+.turn-badge {
+  background: rgba(250, 204, 21, 0.92);
+  color: #111827;
+}
+
+.hud-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 6px;
+}
+
+.ctrl-btn {
+  width: 100%;
+  min-height: 54px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #fff;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+}
+
+.ctrl-btn:hover {
+  transform: translateY(-1px);
+}
+
+.ctrl-btn:active {
+  transform: translateY(1px);
+}
+
+.green-btn {
+  background: linear-gradient(180deg, #5bc48f, #2f9a68);
+}
+
+.blue-btn {
+  background: linear-gradient(180deg, #5a86ff, #3b62db);
+}
+
+.red-btn {
+  background: linear-gradient(180deg, #f2685d, #d9433c);
+}
+
+.ctrl-btn.needs-attention {
+  outline: 3px solid #facc15;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.16), 0 0 24px rgba(250, 204, 21, 0.58);
+  transform: scale(1.02);
+}
+
+#player-hand.needs-end-turn .hand-card-button .uno-card-image {
+  filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.58));
 }
 
 .uno-action-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 
 .uno-square-btn {
-  min-height: 64px;
+  min-height: 74px;
   white-space: normal;
   text-align: center;
 }
 
+@media (max-width: 1100px) {
+  .game-container {
+    grid-template-columns: 1fr;
+  }
+
+  .game-sidebar-hud {
+    border-left: 0;
+    border-top: 1px solid #182132;
+  }
+
+  .uno-table-wrapper {
+    grid-template-rows: 156px 1fr 220px;
+    min-height: 72vh;
+  }
+}
+
+@media (max-width: 760px) {
+  body,
+  main {
+    overflow: auto;
+  }
+
+  .uno-table-wrapper {
+    padding: 16px;
+    grid-template-rows: auto auto auto;
+    gap: 18px;
+  }
+
+  .deck-arena {
+    gap: 18px;
+  }
+
+  .deck-card-slot,
+  .discard-slot,
+  .discard-placeholder,
+  .discard-card-stack {
+    width: 108px;
+    min-height: 162px;
+  }
+
+  .hand-card-button,
+  .hand-card-button .uno-card-image {
+    width: 92px;
+  }
+
+  .hand-card-button {
+    margin-left: -12px;
+  }
+
+  .opponent-card-image {
+    width: 58px;
+    height: 87px;
+  }
+
+  .opponent-stack {
+    min-width: 118px;
+    height: 92px;
+  }
+}

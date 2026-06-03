@@ -42,6 +42,10 @@ const gameStatus = document.querySelector<HTMLDivElement>("#game-status");
 const playersList = document.querySelector<HTMLDivElement>("#players-list");
 const discardPile = document.querySelector<HTMLDivElement>("#discard-pile");
 const playerHand = document.querySelector<HTMLDivElement>("#player-hand");
+const opponentHand = document.querySelector<HTMLDivElement>("#opponent-hand");
+const opponentInfoPanel = document.querySelector<HTMLDivElement>("#opponent-info-panel");
+const localPlayerLabel = document.querySelector<HTMLDivElement>("#local-player-label");
+const drawDeck = document.querySelector<HTMLDivElement>("#draw-deck");
 const startGameButton = document.querySelector<HTMLButtonElement>("#start-game");
 const drawCardButton = document.querySelector<HTMLButtonElement>("#draw-card");
 const endTurnButton = document.querySelector<HTMLButtonElement>("#end-turn");
@@ -91,8 +95,36 @@ function isViewerTurn(): boolean {
   );
 }
 
-function formatCard(card: UnoVisibleCard): string {
-  return `${card.color} ${card.value}`;
+function titleCase(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function prettyCardValue(value: string): string {
+  switch (value) {
+    case "draw_two":
+      return "Draw Two";
+    case "wild_draw_four":
+      return "Wild Draw Four";
+    default:
+      return value
+        .split("_")
+        .map((part) => titleCase(part))
+        .join(" ");
+  }
+}
+
+function cardImagePath(card: Pick<UnoVisibleCard, "color" | "value">): string {
+  const filename = `${card.color}-${card.value.replaceAll("_", "-")}.svg`;
+  return `/images/cards/${filename}`;
+}
+
+function createCardImage(card: Pick<UnoVisibleCard, "color" | "value">, alt: string): HTMLImageElement {
+  const image = document.createElement("img");
+  image.src = cardImagePath(card);
+  image.alt = alt;
+  image.className = "uno-card-image";
+  image.draggable = false;
+  return image;
 }
 
 function parseGameMessage(rawData: string): GameMessage | null {
@@ -113,12 +145,39 @@ function renderPlayers(players: UnoPlayerState[], currentUserId: number | null):
   playersList.innerHTML = "";
 
   for (const player of players) {
-    const playerRow = document.createElement("p");
-    const turnMarker = currentUserId === player.id ? " ← current turn" : "";
-    const unoMarker =
-      player.hand_count === 1 ? (player.uno_safe ? " UNO safe" : " UNO vulnerable") : "";
+    const playerRow = document.createElement("div");
+    playerRow.className = "hud-player-item";
 
-    playerRow.textContent = `${player.email}: ${String(player.hand_count)} card(s)${unoMarker}${turnMarker}`;
+    if (currentUserId === player.id) {
+      playerRow.classList.add("active-turn-row");
+    }
+
+    const playerName = document.createElement("span");
+    const turnMarker = currentUserId === player.id ? "Current turn" : "";
+    const unoMarker =
+      player.hand_count === 1 ? (player.uno_safe ? "UNO safe" : "UNO vulnerable") : "";
+
+    playerName.textContent = `${player.email} • ${String(player.hand_count)} card(s)`;
+
+    const badges = document.createElement("div");
+    badges.className = "hud-player-badges";
+
+    if (unoMarker) {
+      const unoBadge = document.createElement("span");
+      unoBadge.className = `status-badge ${player.uno_safe ? "safe" : "warning"}`;
+      unoBadge.textContent = unoMarker;
+      badges.appendChild(unoBadge);
+    }
+
+    if (turnMarker) {
+      const turnBadge = document.createElement("span");
+      turnBadge.className = "turn-badge";
+      turnBadge.textContent = turnMarker;
+      badges.appendChild(turnBadge);
+    }
+
+    playerRow.appendChild(playerName);
+    playerRow.appendChild(badges);
     playersList.appendChild(playerRow);
   }
 }
@@ -137,17 +196,58 @@ function renderHand(hand: UnoVisibleCard[]): void {
 
   for (const card of hand) {
     const cardButton = document.createElement("button");
-
     cardButton.type = "button";
-    cardButton.textContent = formatCard(card);
-    cardButton.style.margin = "5px";
-    cardButton.style.padding = "10px";
+    cardButton.className = "hand-card-button";
+    cardButton.title = `${titleCase(card.color)} ${prettyCardValue(card.value)}`;
+    cardButton.appendChild(createCardImage(card, cardButton.title));
 
     cardButton.addEventListener("click", () => {
       void playCard(card.game_card_id);
     });
 
     playerHand.appendChild(cardButton);
+  }
+}
+
+function renderOpponentHand(state: UnoGameStateView): void {
+  if (!opponentHand || !opponentInfoPanel) {
+    return;
+  }
+
+  const opponents = state.players.filter((player) => player.id !== state.viewer_user_id);
+
+  opponentHand.innerHTML = "";
+
+  if (opponents.length === 0) {
+    opponentInfoPanel.textContent = "Waiting for opponents...";
+    return;
+  }
+
+  const totalCards = opponents.reduce((sum, player) => sum + player.hand_count, 0);
+  opponentInfoPanel.textContent = `${String(opponents.length)} opponent(s) • ${String(totalCards)} card(s) in play`;
+
+  for (const player of opponents) {
+    const stack = document.createElement("div");
+    stack.className = "opponent-stack";
+    stack.title = `${player.email}: ${String(player.hand_count)} cards`;
+
+    const count = Math.min(player.hand_count, 10);
+
+    for (let index = 0; index < count; index += 1) {
+      const cardBack = document.createElement("img");
+      cardBack.src = "/images/cards/back.svg";
+      cardBack.alt = "";
+      cardBack.className = "opponent-card-image";
+      cardBack.style.setProperty("--stack-offset", `${String(index * 16)}px`);
+      stack.appendChild(cardBack);
+    }
+
+    const label = document.createElement("div");
+    label.className = "opponent-stack-label";
+    label.textContent = `${player.email} • ${String(player.hand_count)}`;
+    stack.appendChild(label);
+
+    opponentHand.appendChild(stack);
   }
 }
 
@@ -206,22 +306,75 @@ function renderStatus(state: UnoGameStateView): void {
 
   setText(
     gameStatus,
-    `Status: ${state.status}. Color: ${colorText}. Deck: ${String(
+    `Status: ${titleCase(state.status)} • Current color: ${titleCase(colorText)} • Draw deck: ${String(
       state.deck_count,
-    )}. Stack: ${String(state.draw_stack)}. Has drawn: ${String(state.has_drawn)}`,
+    )} • Penalty stack: ${String(state.draw_stack)} • Drew this turn: ${state.has_drawn ? "Yes" : "No"}`,
   );
 }
 
 function renderDiscard(state: UnoGameStateView): void {
   if (!state.discard_top) {
-    setText(discardPile, "No discard card yet.");
+    if (discardPile) {
+      discardPile.innerHTML = '<div class="discard-placeholder">Empty</div>';
+    }
     return;
   }
 
-  const isWild = state.discard_top.color === "wild";
-  const displayColor = isWild ? (state.current_color ?? "wild") : state.discard_top.color;
+  if (!discardPile) {
+    return;
+  }
 
-  setText(discardPile, `${displayColor} ${state.discard_top.value}`);
+  discardPile.innerHTML = "";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "discard-card-stack";
+
+  const image = createCardImage(
+    state.discard_top,
+    `${titleCase(state.discard_top.color)} ${prettyCardValue(state.discard_top.value)}`,
+  );
+
+  wrapper.appendChild(image);
+
+  if (state.current_color) {
+    const chip = document.createElement("div");
+    chip.className = `current-color-chip ${state.current_color}`;
+    chip.textContent = `Current color: ${titleCase(state.current_color)}`;
+    wrapper.appendChild(chip);
+  }
+
+  discardPile.appendChild(wrapper);
+}
+
+function renderDeck(state: UnoGameStateView): void {
+  if (!drawDeck) {
+    return;
+  }
+
+  drawDeck.innerHTML = "";
+
+  const image = document.createElement("img");
+  image.src = "/images/cards/back.svg";
+  image.alt = `Draw deck with ${String(state.deck_count)} card(s) remaining`;
+  image.className = "uno-card-image";
+
+  const countBadge = document.createElement("div");
+  countBadge.className = "deck-count-badge";
+  countBadge.textContent = String(state.deck_count);
+
+  drawDeck.appendChild(image);
+  drawDeck.appendChild(countBadge);
+}
+
+function renderPlayerLabels(state: UnoGameStateView): void {
+  if (localPlayerLabel) {
+    localPlayerLabel.textContent = `YOUR HAND • ${String(state.hand.length)} card(s)`;
+    localPlayerLabel.classList.toggle("active-turn-glow", isMyTurn(state));
+  }
+
+  if (opponentInfoPanel) {
+    opponentInfoPanel.classList.toggle("active-turn-glow", !isMyTurn(state) && state.status === "active");
+  }
 }
 
 function renderGameState(state: UnoGameStateView): void {
@@ -233,6 +386,9 @@ function renderGameState(state: UnoGameStateView): void {
   renderDiscard(state);
   renderPlayers(state.players, state.current_user_id);
   renderHand(state.hand);
+  renderOpponentHand(state);
+  renderDeck(state);
+  renderPlayerLabels(state);
 
   updateActionHighlights(state);
   updateTurnMessage(state, becameMyTurn);
